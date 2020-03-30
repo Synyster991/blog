@@ -9,10 +9,11 @@ from django.http import Http404
 from django.forms.utils import ErrorList
 from django.utils import timezone
 from .models import Post, Comment
+from .form import comment_form
 
 
 def home(request):
-    all_posts = Post.objects.all
+    all_posts = Post.objects.all().order_by('-id')
 
     passing_dict = {
         'all_posts': all_posts
@@ -24,18 +25,40 @@ def home(request):
 def detail_post(request, pk):
     post = Post.objects.get(pk=pk)
     comments = Comment.objects.filter(post=post)
-    print("POST")
-    print(pk)
-    print(post)
-    print()
-    print("COMMENT")
-    print(comments)
 
     passing_dict = {
         'post': post,
         'comments': comments
     }
     return render(request, 'blog/detail_post.html', passing_dict)
+
+
+# Adding comment to post
+def add_comment(request, pk):
+    add_comment = comment_form()
+
+    post = Post.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        add_comment = comment_form(request.POST)
+
+        if add_comment.is_valid():
+            new_comment = Comment()
+            new_comment.body = add_comment.cleaned_data['body']
+            new_comment.user = request.user
+            new_comment.post = post
+            new_comment.save()
+
+            return redirect('detail_post', pk)
+        else:
+            errors = new_comment._errors.setdefault('body', ErrorList())
+            errors.append('Invalid data entry.')
+
+    passing_dict = {
+        'add_comment': add_comment
+    }
+    return render(request, 'blog/add_comment.html', passing_dict)
+    
 
 
 # AUTH

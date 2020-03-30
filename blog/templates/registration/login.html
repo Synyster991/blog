@@ -1,10 +1,21 @@
 {% extends 'blog/base.html' %}
 {% block content %}
 <div class="container">
+    <h1 class="font-weight-light">Log In</h1>
+    <br>
     <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn-primary">Login</button>
+    {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div> {% endif %}
+    {% load widget_tweaks %}
+    {% for field in form %}
+    <div class="form-group {% if field.errors %}alert alert-danger{% endif %}">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        {% render_field field class="form-control" %}
+        {% if field.help_text %}<small class="text_muted">{{ field.help_text|safe }}</small> {% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Login</button>
     </form>
 </div>
 {% endblock %}

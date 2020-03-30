@@ -9,9 +9,9 @@
 </section>
 <div class="container">
     {% for post in all_posts%}
-    <div class="card text-center mb-5">
+    <div class="card text-center mb-3">
         <div class="card-header text-right">
-            Created By {{ post.user }}
+            Created by {{ post.user }}
         </div>
         <div class="card-body">
             <h5 class="card-title">{{ post.title }}</h5>

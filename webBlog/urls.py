@@ -30,5 +30,7 @@ urlpatterns = [
     # POST
     path('post/create', views.create_post.as_view(), name='create_post'),
     path('post/<int:pk>', views.detail_post, name='detail_post'),
+    # COMMENT
+    path('post/<int:pk>/addcomment', views.add_comment, name='add_comment'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
