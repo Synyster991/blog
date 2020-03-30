@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
 from blog import views
 
 urlpatterns = [
@@ -25,4 +27,8 @@ urlpatterns = [
     path('signup', views.SignUp.as_view(), name='signup'),
     path('login', auth_views.LoginView.as_view(), name='login'),
     path('logout', auth_views.LogoutView.as_view(), name='logout'),
+    # POST
+    path('post/create', views.create_post.as_view(), name='create_post'),
+    path('post/<int:pk>', views.detail_post, name='detail_post'),
 ]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
