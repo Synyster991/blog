@@ -3,26 +3,57 @@
 <section class="jumbotron text-center">
     <h1 class="jumbotron-heading">When you refuse to reuse it's our Earth you abuse</h1>
     <p class="lead text-muted">Share your thoughts about recycling with everyone</p>
+    {% if user.is_authenticated %}
     <p>
         <a href="{% url 'create_post' %}" class="btn btn-success">Create Discussion</a>
     </p>
+    {% endif %}
 </section>
 <div class="container">
-    {% for post in all_posts%}
-    <div class="card text-center mb-3">
-        <div class="card-header text-right">
-            Created by {{ post.user }}
-        </div>
-        <div class="card-body">
-            <h5 class="card-title">{{ post.title }}</h5>
-            <p class="card-text">{{ post.body }}</p>
-            <a href="{% url 'detail_post' post.id %}" class="btn btn-outline-success btn-block">See Full Discussion</a>
-        </div>
-        <div class="card-footer text-muted">
-            {{ post.time }}
+    <div class="album py-5 bg-light">
+        <div class="container text-center">
+            <h1 class="font-weight-light">Random Good Posts</h1>
+            <br>
+            <div class="row">
+                {% for post in popular_posts %}
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img class="card-img-top" src="{{ job.image }}">
+                        <div class="card-body">
+                            <h5>{{ post.title }}</h5>
+                            <p class="card-text"> {{ post.summary }}</p>
+                            <a class="btn btn-outline-secondary btn-block" href="{% url 'detail_post' post.id %}">See Full Discussion</a>
+                        </div>
+                        </div>
+                    </div>
+                    {% endfor %}                        
+                </div>
+            </div>
         </div>
     </div>
-    {% endfor %}
+</div>
+<div class="container">
+    <div class="album py-5 bg-light">
+        <div class="container text-center">
+            <h1 class="font-weight-light">Most Recent</h1>
+            <br>
+            <div class="row">
+                {% for post in last_six_posts %}
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img class="card-img-top" src="{{ job.image }}">
+                        <div class="card-body">
+                            <h5>{{ post.title }}</h5>
+                            <p class="card-text"> {{ post.summary }}</p>
+                            <a class="btn btn-outline-secondary btn-block" href="{% url 'detail_post' post.id %}">See Full Discussion</a>
+                        </div>
+                        </div>
+                    </div>
+                    {% endfor %}                        
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

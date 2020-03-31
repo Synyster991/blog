@@ -10,15 +10,38 @@ from django.forms.utils import ErrorList
 from django.utils import timezone
 from .models import Post, Comment
 from .form import comment_form
+from random import sample
 
 
 def home(request):
+    last_six_posts = Post.objects.all().order_by('-id')[:6]
+    all_posts = Post.objects.all()
+    pks_of_posts = []
+
+    for post in all_posts:
+        pks_of_posts.append(post.pk)
+
+    random_one, random_two, random_three = sample(pks_of_posts, 3)
+    popular_posts = [Post.objects.get(pk=random_one), Post.objects.get(pk=random_two), Post.objects.get(pk=random_three)]
+
+    passing_dict = {
+        'last_six_posts': last_six_posts,
+        'popular_posts': popular_posts
+    }
+    return render(request, 'blog/home.html', passing_dict)
+
+@login_required(login_url="/login")
+def dashboard(request):
     all_posts = Post.objects.all().order_by('-id')
 
     passing_dict = {
         'all_posts': all_posts
     }
-    return render(request, 'blog/home.html', passing_dict)
+    return render(request, 'blog/dashboard.html', passing_dict)
+
+
+def about(request):
+    return render(request, 'blog/about.html')
 
 
 # Detail Post
@@ -34,6 +57,7 @@ def detail_post(request, pk):
 
 
 # Adding comment to post
+@login_required(login_url="/login")
 def add_comment(request, pk):
     add_comment = comment_form()
 
@@ -69,7 +93,7 @@ class SignUp(generic.CreateView):
 
 
 # Create Post
-class create_post(generic.CreateView):
+class create_post(LoginRequiredMixin, generic.CreateView):
     model = Post
     fields = ['title', 'body']
     template_name = 'blog/create_post.html'

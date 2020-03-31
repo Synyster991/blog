@@ -7,6 +7,12 @@ class Post(models.Model):
     time = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return "{} by {}".format(self.title, self.user)
+    
+    def summary(self):
+        return "{}".format(self.body[:100])
+
 
 class Comment(models.Model):
     body = models.TextField()

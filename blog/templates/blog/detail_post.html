@@ -6,7 +6,9 @@
         <div class="card-body">
             <h6 class="card-title">Created by {{ post.user }}</h6>
             <p class="card-text">{{ post.body }}</p>
+            {% if user.is_authenticated %}
             <a href="{% url 'add_comment' post.pk %}"" class="btn btn-outline-success btn-block">Add Opinion</a>
+            {% endif%}
         </div>
     </div>
 </div>
