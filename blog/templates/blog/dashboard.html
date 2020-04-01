@@ -1,5 +1,18 @@
 {% extends 'blog/base.html' %}
 {% block content %}
+{% if all_announcements %}
+<div class="container">
+    <h1 class="font-weight-light">Announcements</h1>
+    {% for anno in all_announcements %}
+    <div class="card mb-1">
+        <div class="card-body">
+            <h5>{{ anno.title }}</h5>
+            {{ anno.body }}
+        </div>
+      </div>
+    {% endfor %}
+</div>
+{% endif %}
 <section class="jumbotron text-center">
     <h1 class="jumbotron-heading">When you refuse to reuse it's our Earth you abuse</h1>
     <p class="lead text-muted">Share your thoughts about recycling with everyone</p>
@@ -10,9 +23,6 @@
     {% endif %}
 </section>
 <div class="container">
-    <h1 class="font-weight-light">Announcements</h1>
-    <p>You have to be a member of Operation: Difference to see announcements.</p>
-    <hr>
     <h1 class="font-weight-light">Most Recent</h1>
     {% for post in all_posts %}
     <div class="card text-center mb-2">

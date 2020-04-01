@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.forms.utils import ErrorList
 from django.utils import timezone
-from .models import Post, Comment
+from .models import Post, Comment, Members, Announcements
 from .form import comment_form
 from random import sample
 
@@ -36,9 +36,16 @@ def dashboard(request):
     all_posts = Post.objects.all().order_by('-id')
     current_user = request.user
 
+    try:
+        valid_member = Members.objects.get(user=current_user)
+        all_announcements = Announcements.objects.all().order_by('-id')
+    except:
+        all_announcements = False
+    
     passing_dict = {
         'all_posts': all_posts,
-        'current_user': current_user
+        'current_user': current_user, 
+        'all_announcements': all_announcements
     }
     return render(request, 'blog/dashboard.html', passing_dict)
 
