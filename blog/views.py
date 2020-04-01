@@ -30,12 +30,15 @@ def home(request):
     }
     return render(request, 'blog/home.html', passing_dict)
 
+
 @login_required(login_url="/login")
 def dashboard(request):
     all_posts = Post.objects.all().order_by('-id')
+    current_user = request.user
 
     passing_dict = {
-        'all_posts': all_posts
+        'all_posts': all_posts,
+        'current_user': current_user
     }
     return render(request, 'blog/dashboard.html', passing_dict)
 
@@ -97,13 +100,27 @@ class create_post(LoginRequiredMixin, generic.CreateView):
     model = Post
     fields = ['title', 'body']
     template_name = 'blog/create_post.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('dashboard')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         form.instance.time = timezone.datetime.now()
         super(create_post, self).form_valid(form)
 
-        return redirect('home')
+        return redirect('dashboard')
+
+
+class delete_post(LoginRequiredMixin, generic.DeleteView):
+    model = Post
+    template_name = 'blog/delete_post.html'
+    success_url = reverse_lazy('dashboard')
+
+    def get_object(self):
+        post = super(delete_post, self).get_object()
+        if post.user != self.request.user:
+            raise Http404
+        else:
+            return post
+
 
 

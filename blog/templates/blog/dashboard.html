@@ -10,10 +10,21 @@
     {% endif %}
 </section>
 <div class="container">
-    {% for post in all_posts%}
+    <h1 class="font-weight-light">Announcements</h1>
+    <p>You have to be a member of Operation: Difference to see announcements.</p>
+    <hr>
+    <h1 class="font-weight-light">Most Recent</h1>
+    {% for post in all_posts %}
     <div class="card text-center mb-2">
         <div class="card-header text-right">
-            Created by {{ post.user }}
+            {% if post.user == current_user %}
+            Created by you &nbsp;
+            <div class="btn-group" role="group" aria-label="Third group">
+                <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">X</a>
+            </div>
+            {% else %}
+            Created by {{ post.user }} &nbsp;
+            {% endif %}
         </div>
         <div class="card-body">
             <h5 class="card-title">{{ post.title }}</h5>
